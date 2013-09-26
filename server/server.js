@@ -2,6 +2,7 @@ var io = require('socket.io').listen(3333)
 	, Stopwatch = require('./stopwatch')
 	;
 
+var startTime;
 var stopwatch = new Stopwatch();
 stopwatch.on('tick:stopwatch', function(time) {
   io.sockets.emit('time', { time: time });
@@ -11,11 +12,10 @@ stopwatch.on('reset:stopwatch', function(time) {
   io.sockets.emit('time', { time: time });
 });
 
-// 15 mins
-stopwatch.setTime(900000);
-
 // 5 mins
-stopwatch.setTime(300000);
+stopwatch.setTime(3000);
+
+// stopwatch.start();
 
 io.sockets.on('connection', function (socket) {
   io.sockets.emit('time', { time: stopwatch.getTime() });
@@ -31,4 +31,10 @@ io.sockets.on('connection', function (socket) {
   socket.on('click:reset', function () {
     stopwatch.reset();
   });
+
+	socket.on('click:setTime', function(ms) {
+		stopwatch.stop();
+		stopwatch.setTime(ms);
+		io.sockets.emit('time', {time: stopwatch.getTime() });
+	});
 });

@@ -4,18 +4,11 @@ angular.module('countdownApp')
 		restrict: 'E',
 		templateUrl: 'scripts/directives/countdown/countdown.html',
 		controller: function ($scope, $element, $attrs) {
-			var socket = io.connect('http://192.168.1.64:3333');
-			var timer;
-
-			$scope.timer = timer;
+			var socket = io.connect('http://192.168.101.145:3333');
 
 			socket.on('time', function (data) {
-				console.log($scope.timer);
-				console.log(data.time);
 				$scope.timer = data.time;
-
 				$scope.$apply();
-				// console.log($scope.time);
 			});
 
 			$scope.start = function () {
@@ -28,6 +21,13 @@ angular.module('countdownApp')
 
 			$scope.reset = function () {
 				socket.emit('click:reset');
+			};
+
+			$scope.setTimerToFiveMinutes = function () {
+				socket.emit('click:setTime', 300000);
+			};
+			$scope.setTimerToFifteenMinutes = function () {
+				socket.emit('click:setTime', 900000);
 			};
 		}
 	};
