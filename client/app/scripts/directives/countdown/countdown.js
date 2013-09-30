@@ -4,7 +4,9 @@ angular.module('countdownApp')
 		restrict: 'E',
 		templateUrl: 'scripts/directives/countdown/countdown.html',
 		controller: function ($scope, $element, $attrs) {
-			var socket = io.connect('http://192.168.101.145:3333');
+			console.log($attrs.backend);
+			var backendUrl = $attrs.backend || 'http://localhost:3333';
+			var socket = io.connect(backendUrl);
 
 			socket.on('time', function (data) {
 				$scope.timer = data.time;
